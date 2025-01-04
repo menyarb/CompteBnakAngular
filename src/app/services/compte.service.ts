@@ -12,8 +12,11 @@ export class CompteService {
   constructor(private apiService: ApiService) {}
 
   // Méthode pour créer un client
-  createCompte(client: Compte): Observable<Compte> {
-    return this.apiService.request('post', `${this.apiUrl}/create`, client);
+  createCompte(compte: Compte): Observable<Compte> {
+    return this.apiService.request('post', `${this.apiUrl}`, compte);
+  }
+  updateCompte(compte: Compte): Observable<Compte> {
+    return this.apiService.request('put', `${this.apiUrl}`, compte);
   }
 
   // Méthode pour obtenir un client par son ID

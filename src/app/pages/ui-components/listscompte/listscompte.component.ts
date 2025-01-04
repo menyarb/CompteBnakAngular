@@ -1,6 +1,6 @@
 import { ConfirmDialogComponent } from "src/app/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { CompteService } from "src/app/services/compte.service";
 import { MatListModule } from "@angular/material/list";
 import { MatCardModule } from "@angular/material/card";
@@ -14,7 +14,7 @@ import { Compte } from "src/app/models/compte.model";
 @Component({
   selector: 'app-lists-compte',
   standalone: true,
-  imports: [MatListModule, MatCardModule, DatePipe, MatIconModule, MatTableModule, MaterialModule],
+  imports: [MatListModule, MatCardModule, DatePipe,RouterModule, MatIconModule, MatTableModule, MaterialModule],
   templateUrl: './listscompte.component.html',
 })
 export class AppListsCompteComponent implements OnInit {
@@ -29,6 +29,7 @@ export class AppListsCompteComponent implements OnInit {
     private router: Router,
     private compteService: CompteService,
     private route: ActivatedRoute
+
   ) {}
 
   ngOnInit() {
@@ -42,12 +43,12 @@ export class AppListsCompteComponent implements OnInit {
 
   // Ajouter un compte
   ajouterCompte(): void {
-    this.router.navigate(['/ui-components/ajoute-copmte']);
+    this.router.navigate(['/ui-components/ajoute-compte']);
   }
 
   // Modifier un compte
   modifierCompte(compte: Compte): void {
-    this.router.navigate(['/ui-components/modife-compte']);
+    this.router.navigate(['/ui-components/modife-compte/'+compte.rib]);
   }
 
   // Supprimer un compte avec confirmation

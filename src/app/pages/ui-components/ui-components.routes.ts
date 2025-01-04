@@ -8,6 +8,7 @@ import { AppClientComponent } from './client/client.component';
 import { Compte } from './compteBank/compte';
 import { ModifeClientComponent } from './modife-client/modife-client.component';
 import { ModifeCompteComponent } from './modife-compte/modife-compte.component';
+import { AjouteCompteComponent } from './ajoute-compte/ajoute-compte.component';
 
 export const UiComponentsRoutes: Routes = [
   {
@@ -23,7 +24,10 @@ export const UiComponentsRoutes: Routes = [
         path: 'listsCompte/:id',
         component: AppListsCompteComponent,
       }, 
-      
+      {
+        path: 'ajoute-compte',
+        component: AjouteCompteComponent,
+      },
       {
         path: 'listsCompte',
         component: AppListsCompteComponent,
@@ -41,7 +45,7 @@ export const UiComponentsRoutes: Routes = [
         component: Compte,
       },
       {
-        path: 'modife-compte',
+        path: 'modife-compte/:id',
         component: ModifeCompteComponent,
       },
     ],
