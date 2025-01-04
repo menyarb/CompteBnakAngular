@@ -28,7 +28,9 @@ export class CompteService {
   getAllComptes(): Observable<Compte[]> {
     return this.apiService.request('get', this.apiUrl);
   }
-
+  getCompteById(id: number): Observable<Compte> {
+    return this.apiService.request('get', `${this.apiUrl}/${id}`);
+  }
   // Méthode pour supprimer un client
   deleteCompte(id: number): Observable<void> {
     return this.apiService.request('delete', `${this.apiUrl}/${id}`);

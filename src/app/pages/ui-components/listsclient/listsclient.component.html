@@ -3,9 +3,14 @@
     <mat-card-title class="m-b-0">Liste des Clients</mat-card-title>
     <!-- Conteneur avec Flexbox pour gérer l'espacement -->
     <div class="d-flex justify-content-between align-items-center" style="width: 100%;">
+      <div class="mr-auto">
+        <!-- Optionnellement, ajoutez un autre élément si nécessaire -->
+      </div>
       <!-- Bouton "Ajouter un client" à droite -->
+      <div class="ml-auto">
       <button mat-flat-button color="primary" (click)="ajouterClient()">Ajouter un client</button>
     </div>
+  </div>
   </mat-card-header>
 
   <mat-card-content class="b-t-1">

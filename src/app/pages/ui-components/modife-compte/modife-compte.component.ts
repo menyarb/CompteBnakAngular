@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Compte } from 'src/app/models/compte.model';
 import { ClientService } from 'src/app/services/client.service';
 import { CompteService } from 'src/app/services/compte.service';
 
@@ -30,7 +31,8 @@ import { CompteService } from 'src/app/services/compte.service';
 export class ModifeCompteComponent {
    compteForm!: FormGroup;
     clients: any[] = [];
-    compteId: number | null = null; 
+    compteId: number; 
+    compte: Compte ;
     constructor(
       private fb: FormBuilder,
       private compteService: CompteService,
@@ -41,21 +43,32 @@ export class ModifeCompteComponent {
   
     ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
-    this.compteId = idParam ? Number(idParam) : null;
+    this.compteId = Number(idParam);
       // Initialiser le formulaire
       this.compteForm = this.fb.group({
         rib:this.compteId,
         solde: [''],
         clientId: ['']
       });
-  
+      this.getCompte();
       // Charger la liste des clients
       this.clientService.getAllClients().subscribe((clients) => {
         this.clients = clients;
         console.log("clients",this.clients)
       });
     }
-  
+    getCompte(): void {
+      this.compteService.getCompteById(this.compteId).subscribe(data => {
+         this.compte = data;
+         console.log("compte", this.compte);
+         // Mettre à jour le formulaire avec les données du compte
+         this.compteForm.patchValue({
+            solde: this.compte.solde,
+            clientId: this.compte.clientId
+         });
+      });
+   }
+
     // Soumettre le formulaire pour ajouter un compte
     onSubmit(): void {
       if (this.compteForm.valid) {

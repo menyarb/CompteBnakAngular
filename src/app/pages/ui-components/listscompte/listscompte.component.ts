@@ -4,30 +4,33 @@ import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { CompteService } from "src/app/services/compte.service";
 import { MatListModule } from "@angular/material/list";
 import { MatCardModule } from "@angular/material/card";
-import { DatePipe } from "@angular/common";
+import { CommonModule, DatePipe } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
 import { MaterialModule } from "src/app/material.module";
 import { Component, OnInit } from "@angular/core";
 import { Compte } from "src/app/models/compte.model";
+import { ClientService } from "src/app/services/client.service";
 
 @Component({
   selector: 'app-lists-compte',
   standalone: true,
-  imports: [MatListModule, MatCardModule, DatePipe,RouterModule, MatIconModule, MatTableModule, MaterialModule],
+  imports: [MatListModule, MatCardModule, DatePipe,RouterModule,CommonModule, MatIconModule, MatTableModule, MaterialModule],
   templateUrl: './listscompte.component.html',
 })
 export class AppListsCompteComponent implements OnInit {
   comptes: Compte[] = [];
-  displayedColumns: string[] = ['nom', 'rib', 'solde', 'actions'];
+  displayedColumns: string[] = [];
   isLoading: boolean = false;
   errorMessage: string = '';
-  clientId: number | null = null; // Variable pour stocker l'ID client
+  clientId: number | null = null; 
+  clientName: string | null;
 
   constructor(
     private dialog: MatDialog,
     private router: Router,
     private compteService: CompteService,
+    private clientService: ClientService,
     private route: ActivatedRoute
 
   ) {}
@@ -36,9 +39,19 @@ export class AppListsCompteComponent implements OnInit {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.clientId = idParam ? Number(idParam) : null;
     console.log('ID:', this.clientId);
-    
+    this.updateDisplayedColumns();
     this.fetchComptes();
     
+  }
+  updateDisplayedColumns(): void {
+    // Ajouter les colonnes de base
+    this.displayedColumns = ['rib', 'solde', 'actions'];
+
+    if (this.clientId == null) {
+      this.displayedColumns.unshift('nomClient');
+    }else{
+      this.clientService.getClientById(this.clientId).subscribe(client=>this.clientName=client.prenom+" "+client.nom);
+    }
   }
 
   // Ajouter un compte
@@ -60,8 +73,7 @@ export class AppListsCompteComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log('Compte supprimé :', compte);
-        this.comptes = this.comptes.filter((c) => c !== compte);
+        this.compteService.deleteCompte(compte.rib).subscribe(()=>this.fetchComptes())
       } else {
         console.log('Suppression annulée');
       }

@@ -1,6 +1,6 @@
 <mat-card class="cardWithShadow theme-card">
   <mat-card-header>
-    <mat-card-title class="m-b-0">Liste des Compte</mat-card-title>
+    <mat-card-title class="m-b-0">Liste des Comptes: <span *ngIf="clientId != null">{{clientName}}</span></mat-card-title>
     
     <!-- Conteneur avec Flexbox pour gérer l'espacement -->
     <div class="d-flex justify-content-between align-items-center" style="width:80%;">
@@ -25,9 +25,9 @@
       <table mat-table [dataSource]="comptes">
         
         <!-- Colonne Nom -->
-        <ng-container matColumnDef="nom">
-          <th mat-header-cell *matHeaderCellDef> Nom </th>
-          <td mat-cell *matCellDef="let compte"> {{ compte.nom }} </td>
+        <ng-container matColumnDef="nomClient" *ngIf="clientId == null">
+          <th  mat-header-cell *matHeaderCellDef> Client </th>
+          <td mat-cell *matCellDef="let compte"> {{ compte.nomClient }} </td>
         </ng-container>
 
         <!-- Colonne RIB -->
