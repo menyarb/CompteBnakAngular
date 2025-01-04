@@ -47,8 +47,9 @@ export class AjouteCompteComponent {
   ) {}
 
   ngOnInit(): void {
-    // Initialiser le formulaire
+    // Initialiser le formulaire avec validations
     this.compteForm = this.fb.group({
+
       solde: [''],
       clientId: ['']
     });
@@ -71,7 +72,6 @@ export class AjouteCompteComponent {
     );
   }
   
-
   onSubmit(): void {
     if (this.compteForm.valid) {
       this.compteService.createCompte(this.compteForm.value).subscribe({

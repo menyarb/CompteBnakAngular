@@ -37,12 +37,12 @@ export class AppClientComponent {
   constructor(
     private clientService: ClientService,
     private router: Router,
-    private fb: FormBuilder // Inject FormBuilder
+    private fb: FormBuilder
   ) {
-    // Initialize the form group
+    // Initialiser le formulaire avec des validations
     this.clientForm = this.fb.group({
-      nom: ['', Validators.required],
-      prenom: ['', Validators.required],
+      nom: ['', [Validators.required, Validators.minLength(2)]], // Nom obligatoire, min 2 caractères
+      prenom: ['', [Validators.required, Validators.minLength(2)]], // Prénom obligatoire, min 2 caractères
     });
   }
 

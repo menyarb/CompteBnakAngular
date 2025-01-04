@@ -1,8 +1,7 @@
-
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
-import {MatIconModule} from '@angular/material/icon';
-import {DatePipe} from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { DatePipe } from '@angular/common';
 import { MaterialModule } from 'src/app/material.module';
 import { Router, RouterModule } from '@angular/router';
 import { ConfirmDialogComponent } from 'src/app/confirm-dialog/confirm-dialog.component';
@@ -12,37 +11,44 @@ import { Client } from 'src/app/models/client.model';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-
-
 @Component({
   selector: 'app-lists',
   standalone: true,
-  imports: [MatListModule, MatCardModule, DatePipe,MatIconModule, MaterialModule,CommonModule,RouterModule ],
+  imports: [
+    MatListModule,
+    MatCardModule,
+    DatePipe,
+    MatIconModule,
+    MaterialModule,
+    CommonModule,
+    RouterModule
+  ],
   templateUrl: './listsclient.component.html',
+  styleUrls: ['./listsclient.component.css']
 })
-export class AppListsComponent {
-  clients: Client[] = []; 
-  displayedColumns: string[] = ['nom', 'prenom', 'actions']; 
-  isLoading: boolean = false; 
-  errorMessage: string = ''; 
+export class AppListsComponent implements OnInit {
+  clients: Client[] = [];
+  displayedColumns: string[] = ['nom', 'prenom', 'actions'];
+  isLoading: boolean = false;
+  errorMessage: string = '';
 
   constructor(
-    private clientService: ClientService, 
-    private dialog: MatDialog, 
-    private router: Router 
+    private clientService: ClientService,
+    private dialog: MatDialog,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.fetchClients(); 
+    this.fetchClients();
   }
 
- 
+  // Méthode pour récupérer tous les clients
   fetchClients(): void {
-    this.isLoading = true; 
+    this.isLoading = true; // Indicateur de chargement
     this.clientService.getAllClients().subscribe(
       (data) => {
-        this.clients = data;
-        this.isLoading = false; 
+        this.clients = data; // Charger les clients
+        this.isLoading = false;
       },
       (error) => {
         this.errorMessage = 'Erreur lors du chargement des clients.';
@@ -57,11 +63,11 @@ export class AppListsComponent {
   }
 
   // Méthode pour naviguer vers la page de modification d'un client
-  modifierClient(client: any) {
-    this.router.navigate(['/ui-components/modife-client/', client.id]); // Redirige vers une page de modification.
+  modifierClient(client: Client): void {
+    this.router.navigate(['/ui-components/modife-client', client.id]);
   }
 
-  // Méthode pour supprimer un client
+  // Méthode pour supprimer un client avec confirmation
   supprimerClient(client: Client): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '300px',
@@ -70,14 +76,18 @@ export class AppListsComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.clientService.deleteClient(client.id).subscribe(
-          () => {
+        this.isLoading = true; // Indicateur de chargement pendant la suppression
+        this.clientService.deleteClient(client.id).subscribe({
+          next: () => {
             this.clients = this.clients.filter((c) => c.id !== client.id);
+            alert('Client supprimé avec succès.');
+            this.isLoading = false;
           },
-          (error) => {
+          error: () => {
             this.errorMessage = 'Erreur lors de la suppression du client.';
-          }
-        );
+            this.isLoading = false;
+          },
+        });
       }
     });
   }
