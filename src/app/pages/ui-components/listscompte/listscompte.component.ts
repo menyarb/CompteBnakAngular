@@ -17,14 +17,15 @@ import { ClientService } from "src/app/services/client.service";
   standalone: true,
   imports: [MatListModule, MatCardModule, DatePipe,RouterModule,CommonModule, MatIconModule, MatTableModule, MaterialModule],
   templateUrl: './listscompte.component.html',
+  styleUrls: ['./listscompte.component.css']
 })
 export class AppListsCompteComponent implements OnInit {
   comptes: Compte[] = [];
   displayedColumns: string[] = [];
   isLoading: boolean = false;
   errorMessage: string = '';
-  clientId: number | null = null; 
-  clientName: string | null;
+  clientId: number | null = null;
+  clientName: string | null = null;
 
   constructor(
     private dialog: MatDialog,
@@ -32,39 +33,46 @@ export class AppListsCompteComponent implements OnInit {
     private compteService: CompteService,
     private clientService: ClientService,
     private route: ActivatedRoute
-
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.clientId = idParam ? Number(idParam) : null;
-    console.log('ID:', this.clientId);
     this.updateDisplayedColumns();
     this.fetchComptes();
-    
   }
+
+  // Update displayed columns based on clientId
   updateDisplayedColumns(): void {
-    // Ajouter les colonnes de base
     this.displayedColumns = ['rib', 'solde', 'actions'];
 
     if (this.clientId == null) {
       this.displayedColumns.unshift('nomClient');
-    }else{
-      this.clientService.getClientById(this.clientId).subscribe(client=>this.clientName=client.prenom+" "+client.nom);
+    } else {
+      this.clientService
+        .getClientById(this.clientId)
+        .subscribe({
+          next: (client) => {
+            this.clientName = `${client.prenom} ${client.nom}`;
+          },
+          error: () => {
+            this.errorMessage = 'Erreur lors de la récupération des informations du client.';
+          },
+        });
     }
   }
 
-  // Ajouter un compte
+  // Navigate to account creation page
   ajouterCompte(): void {
     this.router.navigate(['/ui-components/ajoute-compte']);
   }
 
-  // Modifier un compte
+  // Navigate to account edit page
   modifierCompte(compte: Compte): void {
-    this.router.navigate(['/ui-components/modife-compte/'+compte.rib]);
+    this.router.navigate([`/ui-components/modife-compte/${compte.rib}`]);
   }
 
-  // Supprimer un compte avec confirmation
+  // Confirm and delete an account
   supprimerCompte(compte: Compte): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '300px',
@@ -73,38 +81,37 @@ export class AppListsCompteComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.compteService.deleteCompte(compte.rib).subscribe(()=>this.fetchComptes())
-      } else {
-        console.log('Suppression annulée');
+        this.isLoading = true;
+        this.compteService.deleteCompte(compte.rib).subscribe({
+          next: () => {
+            this.comptes = this.comptes.filter((c) => c.rib !== compte.rib);
+            this.isLoading = false;
+          },
+          error: () => {
+            this.errorMessage = 'Erreur lors de la suppression du compte.';
+            this.isLoading = false;
+          },
+        });
       }
     });
   }
 
-  // Charger les comptes pour un client spécifique
+  // Fetch accounts from the service
   fetchComptes(): void {
     this.isLoading = true;
-    if (this.clientId) {
-      this.compteService.getCompteByIdClient(this.clientId).subscribe(
-        (data) => {
-          this.comptes = data;
-          this.isLoading = false;
-        },
-        (error) => {
-          this.errorMessage = 'Erreur lors du chargement des comptes.';
-          this.isLoading = false;
-        }
-      );
-    } else {
-      this.compteService.getAllComptes().subscribe(
-        (data) => {
-          this.comptes = data;
-          this.isLoading = false;
-        },
-        (error) => {
-          this.errorMessage = 'Erreur lors du chargement des comptes.';
-          this.isLoading = false;
-        }
-      );
-    }
+    const fetchObservable = this.clientId
+      ? this.compteService.getCompteByIdClient(this.clientId)
+      : this.compteService.getAllComptes();
+
+    fetchObservable.subscribe({
+      next: (data) => {
+        this.comptes = data;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Erreur lors du chargement des comptes.';
+        this.isLoading = false;
+      },
+    });
   }
 }

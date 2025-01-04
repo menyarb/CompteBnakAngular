@@ -38,19 +38,24 @@ export class AjouteCompteComponent {
   ) {}
 
   ngOnInit(): void {
-    // Initialiser le formulaire
+    // Initialiser le formulaire avec validations
     this.compteForm = this.fb.group({
-      
-      solde: [''],
-      clientId: ['']
+      solde: ['', [Validators.required, Validators.min(0)]], // Solde obligatoire et positif
+      clientId: ['', Validators.required] // Client obligatoire
     });
-
+  
     // Charger la liste des clients
-    this.clientService.getAllClients().subscribe((clients) => {
-      this.clients = clients;
-      console.log("clients",this.clients)
+    this.clientService.getAllClients().subscribe({
+      next: (clients) => {
+        this.clients = clients;
+        console.log("Clients chargés :", this.clients);
+      },
+      error: (err) => {
+        console.error("Erreur lors du chargement des clients :", err);
+      }
     });
   }
+  
 
   // Soumettre le formulaire pour ajouter un compte
   onSubmit(): void {
