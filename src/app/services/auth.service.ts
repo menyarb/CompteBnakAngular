@@ -12,7 +12,10 @@ export class AuthService {
         
         return this.apiService.request('post', 'auth/login', credentials);
     }
-
+    isAuthenticated(): boolean {
+        const token = localStorage.getItem('auth_token');
+        return token !== null && token !== '';
+      }
    
     setAuthToken(token: string): void {
         window.localStorage.setItem("auth_token", token);
