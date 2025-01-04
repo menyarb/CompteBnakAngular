@@ -57,8 +57,8 @@ export class AppListsComponent {
   }
 
   // Méthode pour naviguer vers la page de modification d'un client
-  modifierClient(client: Client): void {
-    this.router.navigate(['/ui-components/modife-compte'], { state: { client } });
+  modifierClient(client: any) {
+    this.router.navigate(['/ui-components/modife-client/', client.id]); // Redirige vers une page de modification.
   }
 
   // Méthode pour supprimer un client

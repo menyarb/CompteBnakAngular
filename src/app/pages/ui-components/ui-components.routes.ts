@@ -37,7 +37,7 @@ export const UiComponentsRoutes: Routes = [
         component: AppClientComponent,
       },
       {
-        path: 'modife-client',
+        path: 'modife-client/:id',
         component: ModifeClientComponent,
       },
       {

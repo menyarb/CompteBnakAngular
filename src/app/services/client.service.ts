@@ -25,7 +25,9 @@ export class ClientService {
   getAllClients(): Observable<Client[]> {
     return this.apiService.request('get', this.apiUrl);
   }
-
+  updateClient(id: number, client: any): Observable<any> {
+    return this.apiService.request('put',`${this.apiUrl}/update/${id}`, client);
+  }
   // Méthode pour supprimer un client
   deleteClient(id: number): Observable<void> {
     return this.apiService.request('delete', `${this.apiUrl}/${id}`);
