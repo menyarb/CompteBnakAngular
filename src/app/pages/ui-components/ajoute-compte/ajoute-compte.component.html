@@ -20,13 +20,20 @@
           <div class="col-lg-4 col-sm-6">
             <mat-form-field class="w-100" appearance="outline">
               <mat-label>Client</mat-label>
-              <mat-select formControlName="clientId">
-                <mat-option *ngFor="let client of this.clients" [value]="client.id">
+              <input
+                matInput
+                [matAutocomplete]="auto"
+                formControlName="clientId"
+                placeholder="Sélectionner un client"
+              />
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayClient.bind(this)">
+                <mat-option *ngFor="let client of filteredClients$ | async" [value]="client.id">
                   {{ client.nom }} {{ client.prenom }}
                 </mat-option>
-              </mat-select>
+              </mat-autocomplete>
             </mat-form-field>
           </div>
+          
         </div>
   
         <!-- Bouton Ajouter -->

@@ -1,7 +1,8 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -10,8 +11,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { ClientService } from 'src/app/services/client.service';
 import { CompteService } from 'src/app/services/compte.service';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-ajoute-compte',
@@ -22,14 +25,20 @@ import { CompteService } from 'src/app/services/compte.service';
         ReactiveFormsModule,
         CdkScrollable,
         MatButtonModule,
-        MatTooltipModule, MatCardModule, MatInputModule, MatCheckboxModule,CommonModule],
+        MatTooltipModule, MatCardModule, MatInputModule, MatCheckboxModule,CommonModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatAutocompleteModule,
+        ReactiveFormsModule,
+        AsyncPipe,],
   templateUrl: './ajoute-compte.component.html',
   styleUrl: './ajoute-compte.component.scss'
 })
 export class AjouteCompteComponent {
   compteForm!: FormGroup;
   clients: any[] = [];
-
+  filteredClients$!: Observable<any[]>;
   constructor(
     private fb: FormBuilder,
     private compteService: CompteService,
@@ -40,19 +49,29 @@ export class AjouteCompteComponent {
   ngOnInit(): void {
     // Initialiser le formulaire
     this.compteForm = this.fb.group({
-      
       solde: [''],
       clientId: ['']
     });
-
-    // Charger la liste des clients
+  
+    
     this.clientService.getAllClients().subscribe((clients) => {
       this.clients = clients;
-      console.log("clients",this.clients)
+  
+      this.filteredClients$ = this.compteForm.get('clientId')!.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filterClients(value))
+      );
     });
   }
+  
+  private _filterClients(value: string): any[] {
+    const filterValue = value.toLowerCase();
+    return this.clients.filter((client) =>
+      `${client.nom} ${client.prenom}`.toLowerCase().includes(filterValue)
+    );
+  }
+  
 
-  // Soumettre le formulaire pour ajouter un compte
   onSubmit(): void {
     if (this.compteForm.valid) {
       this.compteService.createCompte(this.compteForm.value).subscribe({
@@ -68,5 +87,10 @@ export class AjouteCompteComponent {
     } else {
       alert('Veuillez remplir correctement le formulaire.');
     }
+  }
+  displayClient(clientId: any): string {
+    if (!clientId) return '';
+    const client = this.clients.find((c) => c.id === clientId);
+    return client ? `${client.nom} ${client.prenom}` : '';
   }
 }
