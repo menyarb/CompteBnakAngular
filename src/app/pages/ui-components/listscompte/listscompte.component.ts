@@ -1,37 +1,44 @@
-import { Component } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
-import { DatePipe } from '@angular/common';
-import { MaterialModule } from 'src/app/material.module';
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
-import { MatTableModule } from '@angular/material/table';
-import { Router } from '@angular/router';
-
-export interface Compte {
-  nom: string;
-  rib: string;
-  solde: number;
-}
+import { ConfirmDialogComponent } from "src/app/confirm-dialog/confirm-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+import { ActivatedRoute, Router } from "@angular/router";
+import { CompteService } from "src/app/services/compte.service";
+import { MatListModule } from "@angular/material/list";
+import { MatCardModule } from "@angular/material/card";
+import { DatePipe } from "@angular/common";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTableModule } from "@angular/material/table";
+import { MaterialModule } from "src/app/material.module";
+import { Component, OnInit } from "@angular/core";
+import { Compte } from "src/app/models/compte.model";
 
 @Component({
   selector: 'app-lists-compte',
   standalone: true,
-  imports: [MatListModule, MatCardModule, DatePipe, MatIconModule,MatTableModule,MaterialModule],
+  imports: [MatListModule, MatCardModule, DatePipe, MatIconModule, MatTableModule, MaterialModule],
   templateUrl: './listscompte.component.html',
 })
-export class AppListsCompteComponent {
-  comptes: Compte[] = [
-    { nom: 'Compte A', rib: 'FR7630006000011234567890189', solde: 2000 },
-    { nom: 'Compte B', rib: 'FR7630006000012234567890190', solde: 3500 },
-    { nom: 'Compte C', rib: 'FR7630006000013234567890201', solde: 1500 },
-    { nom: 'Compte D', rib: 'FR7630006000014234567890202', solde: 4200 },
-  ];
-
+export class AppListsCompteComponent implements OnInit {
+  comptes: Compte[] = [];
   displayedColumns: string[] = ['nom', 'rib', 'solde', 'actions'];
+  isLoading: boolean = false;
+  errorMessage: string = '';
+  clientId: number | null = null; // Variable pour stocker l'ID client
 
-  constructor(private dialog: MatDialog,private router: Router) {}
+  constructor(
+    private dialog: MatDialog,
+    private router: Router,
+    private compteService: CompteService,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit() {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.clientId = idParam ? Number(idParam) : null;
+    console.log('ID:', this.clientId);
+    
+    this.fetchComptes();
+    
+  }
 
   // Ajouter un compte
   ajouterCompte(): void {
@@ -58,5 +65,33 @@ export class AppListsCompteComponent {
         console.log('Suppression annulée');
       }
     });
+  }
+
+  // Charger les comptes pour un client spécifique
+  fetchComptes(): void {
+    this.isLoading = true;
+    if (this.clientId) {
+      this.compteService.getCompteByIdClient(this.clientId).subscribe(
+        (data) => {
+          this.comptes = data;
+          this.isLoading = false;
+        },
+        (error) => {
+          this.errorMessage = 'Erreur lors du chargement des comptes.';
+          this.isLoading = false;
+        }
+      );
+    } else {
+      this.compteService.getAllComptes().subscribe(
+        (data) => {
+          this.comptes = data;
+          this.isLoading = false;
+        },
+        (error) => {
+          this.errorMessage = 'Erreur lors du chargement des comptes.';
+          this.isLoading = false;
+        }
+      );
+    }
   }
 }

@@ -20,11 +20,14 @@ export const UiComponentsRoutes: Routes = [
         component: AppListsComponent,
       },
       {
-        path: 'listsCompte',
+        path: 'listsCompte/:id',
         component: AppListsCompteComponent,
       }, 
       
-     
+      {
+        path: 'listsCompte',
+        component: AppListsCompteComponent,
+      }, 
       {
         path: 'ajoute-client',
         component: AppClientComponent,

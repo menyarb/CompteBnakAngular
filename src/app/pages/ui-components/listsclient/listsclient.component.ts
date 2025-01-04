@@ -4,7 +4,7 @@ import { MatListModule } from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {DatePipe} from '@angular/common';
 import { MaterialModule } from 'src/app/material.module';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ConfirmDialogComponent } from 'src/app/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ClientService } from 'src/app/services/client.service';
@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-lists',
   standalone: true,
-  imports: [MatListModule, MatCardModule, DatePipe,MatIconModule, MaterialModule,CommonModule ],
+  imports: [MatListModule, MatCardModule, DatePipe,MatIconModule, MaterialModule,CommonModule,RouterModule ],
   templateUrl: './listsclient.component.html',
 })
 export class AppListsComponent {

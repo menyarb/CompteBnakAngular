@@ -27,6 +27,9 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let client">
+            <button mat-icon-button color="primary" [routerLink]="['/ui-components/listsCompte', client.id]"  >
+              <mat-icon>Comptes</mat-icon>
+            </button>
             <button mat-icon-button color="primary" (click)="modifierClient(client)">
               <mat-icon>edit</mat-icon>
             </button>
