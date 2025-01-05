@@ -28,7 +28,7 @@ import Swal from 'sweetalert2';
     MatCheckboxModule
   ],
   templateUrl: './modife-client.component.html',
-  styleUrls: ['./modife-client.component.scss']
+  styleUrls: ['./modife-client.component.css']
 })
 export class ModifeClientComponent implements OnInit {
   clientForm: FormGroup; // Formulaire pour le client.

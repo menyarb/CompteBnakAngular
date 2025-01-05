@@ -22,6 +22,7 @@ import { AuthService } from 'src/app/services/auth.service';
     MatButtonModule,
   ],
   templateUrl: './side-login.component.html',
+  styleUrl: './side-login.component.css'
 })
 export class AppSideLoginComponent {
   constructor(private router: Router,private authService: AuthService   ) { }

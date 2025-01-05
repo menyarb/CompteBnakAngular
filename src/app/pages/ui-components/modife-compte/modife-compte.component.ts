@@ -27,7 +27,7 @@ import Swal from 'sweetalert2';
           MatButtonModule,
           MatTooltipModule, MatCardModule, MatInputModule, MatCheckboxModule,CommonModule],
   templateUrl: './modife-compte.component.html',
-  styleUrl: './modife-compte.component.scss'
+  styleUrl: './modife-compte.component.css'
 })
 export class ModifeCompteComponent {
    compteForm!: FormGroup;

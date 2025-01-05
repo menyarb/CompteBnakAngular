@@ -28,6 +28,7 @@ import Swal from 'sweetalert2';
     MatTooltipModule, MatCardModule, MatInputModule, MatCheckboxModule
   ],
   templateUrl: './client.component.html',
+  styleUrl: './ajoute-client.component.css'
 })
 export class AppClientComponent {
   clientForm: FormGroup; // Define the form group
