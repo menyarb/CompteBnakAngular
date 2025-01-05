@@ -10,6 +10,7 @@ import { ClientService } from 'src/app/services/client.service';
 import { Client } from 'src/app/models/client.model';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-lists',
@@ -80,7 +81,8 @@ export class AppListsComponent implements OnInit {
         this.clientService.deleteClient(client.id).subscribe({
           next: () => {
             this.clients = this.clients.filter((c) => c.id !== client.id);
-            alert('Client supprimé avec succès.');
+            
+            Swal.fire("Client supprimé avec succès!");
             this.isLoading = false;
           },
           error: () => {

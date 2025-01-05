@@ -15,6 +15,7 @@ import { Observable } from 'rxjs';
 import { ClientService } from 'src/app/services/client.service';
 import { CompteService } from 'src/app/services/compte.service';
 import { startWith, map } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-ajoute-compte',
@@ -76,7 +77,7 @@ export class AjouteCompteComponent {
     if (this.compteForm.valid) {
       this.compteService.createCompte(this.compteForm.value).subscribe({
         next: () => {
-          alert('Compte ajouté avec succès!');
+           Swal.fire("Compte ajouté avec succès!", "success");
           this.router.navigate(['/ui-components/listsCompte']);
         },
         error: (err) => {

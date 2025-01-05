@@ -14,6 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Compte } from 'src/app/models/compte.model';
 import { ClientService } from 'src/app/services/client.service';
 import { CompteService } from 'src/app/services/compte.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modife-compte',
@@ -33,6 +34,8 @@ export class ModifeCompteComponent {
     clients: any[] = [];
     compteId: number; 
     compte: Compte ;
+
+
     constructor(
       private fb: FormBuilder,
       private compteService: CompteService,
@@ -74,7 +77,8 @@ export class ModifeCompteComponent {
       if (this.compteForm.valid) {
         this.compteService.updateCompte(this.compteForm.value).subscribe({
           next: () => {
-            alert('Compte ajouté avec succès!');
+            
+            Swal.fire("Compte ajouté avec succès!");
             this.router.navigate(['/ui-components/listsCompte']);
           },
           error: (err) => {

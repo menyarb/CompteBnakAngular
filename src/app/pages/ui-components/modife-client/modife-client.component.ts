@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modife-client',
@@ -72,7 +73,7 @@ export class ModifeClientComponent implements OnInit {
     const updatedClient = this.clientForm.value;
     this.clientService.updateClient(this.clientId, updatedClient).subscribe({
       next: () => {
-        alert('Client modifié avec succès.');
+        Swal.fire("Client modifié avec succès!");
         this.router.navigate(['/ui-components/listsclient']); // Navigation après modification
       },
       error: () => alert('Erreur lors de la modification du client.')

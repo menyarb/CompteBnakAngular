@@ -12,6 +12,7 @@ import { ClientService } from 'src/app/services/client.service';
 import { CommonModule } from '@angular/common';
 import { Client } from 'src/app/models/client.model';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-tooltips',
@@ -60,6 +61,7 @@ export class AppClientComponent {
       (newClient) => {
         this.isLoading = false;
         this.successMessage = 'Client ajouté avec succès!';
+         Swal.fire("Client ajouté avec succès!");
         this.router.navigate(['/ui-components/listsclient']); // Redirect to client list after success
       },
       (error) => {

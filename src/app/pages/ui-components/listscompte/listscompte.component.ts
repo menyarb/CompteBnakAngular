@@ -11,6 +11,7 @@ import { MaterialModule } from "src/app/material.module";
 import { Component, OnInit } from "@angular/core";
 import { Compte } from "src/app/models/compte.model";
 import { ClientService } from "src/app/services/client.service";
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-lists-compte',
@@ -86,6 +87,7 @@ export class AppListsCompteComponent implements OnInit {
           next: () => {
             this.comptes = this.comptes.filter((c) => c.rib !== compte.rib);
             this.isLoading = false;
+            Swal.fire("Compte supprimé avec succès!");
           },
           error: () => {
             this.errorMessage = 'Erreur lors de la suppression du compte.';
