@@ -49,4 +49,8 @@ export class ClientService {
       },
     });
   }
+  getClientCount(): Observable<number> {
+    return this.apiService.request('get',`${this.apiUrl}/count`);
+    
+  }
 }

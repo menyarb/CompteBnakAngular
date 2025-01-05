@@ -35,4 +35,8 @@ export class CompteService {
   deleteCompte(id: number): Observable<void> {
     return this.apiService.request('delete', `${this.apiUrl}/${id}`);
   }
+  getCompteCount(): Observable<number> {
+    return this.apiService.request('get',`${this.apiUrl}/count`);
+    
+  }
 }

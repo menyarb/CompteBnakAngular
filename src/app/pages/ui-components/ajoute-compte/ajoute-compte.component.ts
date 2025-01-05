@@ -34,7 +34,7 @@ import Swal from 'sweetalert2';
         ReactiveFormsModule,
         AsyncPipe,],
   templateUrl: './ajoute-compte.component.html',
-  styleUrl: './ajoute-compte.component.scss'
+  styleUrl: './ajoute-compte.component.css'
 })
 export class AjouteCompteComponent {
   compteForm!: FormGroup;
