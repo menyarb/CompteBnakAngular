@@ -12,6 +12,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
+
 @Component({
   selector: 'app-lists',
   standalone: true,
@@ -67,6 +68,24 @@ export class AppListsComponent implements OnInit {
   modifierClient(client: Client): void {
     this.router.navigate(['/ui-components/modife-client', client.id]);
   }
+  supprimerClientAjax(id: number): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '300px',
+      data: { message: 'Êtes-vous sûr de vouloir supprimer ce client ?' },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.isLoading = true;
+    try {
+      this.clientService.deleteClientWithAjax(id);
+      Swal.fire('Succès', 'Le compte a été supprimé avec succès.', 'success');
+      this.isLoading = false;
+      this.clients = this.clients.filter((c) => c.id !== id);
+    } catch (error) {
+      Swal.fire('Erreur', 'Une erreur est survenue lors de la suppression.', 'error');
+    }}
+  });}
+  
 
   // Méthode pour supprimer un client avec confirmation
   supprimerClient(client: Client): void {

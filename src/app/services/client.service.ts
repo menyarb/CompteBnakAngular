@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service'; // Importez ApiService
 import { Observable } from 'rxjs';
 import { Client } from '../models/client.model'; // Modèle Client
+import * as $ from 'jquery';
 
 @Injectable({
   providedIn: 'root'
@@ -31,5 +32,21 @@ export class ClientService {
   // Méthode pour supprimer un client
   deleteClient(id: number): Observable<void> {
     return this.apiService.request('delete', `${this.apiUrl}/${id}`);
+  }
+  deleteClientWithAjax(id: number): void {
+    const token = localStorage.getItem('auth_token');
+    $.ajax({
+      url: `http://localhost:8080/clients/${id}`,
+      type: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`, // Add token to the Authorization header
+      },
+      success: () => {
+        console.log('Client deleted successfully.');
+      },
+      error: () => {
+        console.error('Error deleting client.');
+      },
+    });
   }
 }
