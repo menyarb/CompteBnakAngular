@@ -20,12 +20,7 @@ export const navItems: NavItem[] = [
   {
     navCap: 'Auth',
   },
-  {
-    displayName: 'Login',
-    iconName: 'lock',
-    bgcolor: 'accent',
-    route: '/authentication/login',
-  },
+  
  
 
 ];
